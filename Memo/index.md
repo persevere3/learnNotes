@@ -135,7 +135,7 @@ service.interceptors.response.use(
   (response: AxiosResponse) => {
 
     const res = response.data
-
+ 
   
 
     if (response.config.responseType === 'blob') return res
@@ -410,26 +410,6 @@ src/
 │   └── guards.ts             // 路由導航守衛（如登入驗證、角色權限）
 ```
 
-```
-// src/router/constantRoutes.ts
-import type { RouteRecordRaw } from 'vue-router'
-
-export const constantRoutes: RouteRecordRaw[] = [
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('@/views/login/LoginPage.vue'),
-    meta: { title: '登入', public: true },
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: () => import('@/views/error/404.vue'),
-    meta: { title: '找不到頁面', public: true },
-  },
-]
-```
-
 stores
 ```
 // stores/user.ts
@@ -493,16 +473,138 @@ views
 config ?
 
 # 2025-07-22
-格式化 editor
-样式
-mock test 
-localStorage 持久储存 
+table 
+
+@
+```
+// vite.config.ts
+import { fileURLToPath, URL } from 'node:url'
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))  // 把 @ 指向 src
+    }
+  }
+})
+```
+
+mock
+```
+npm install mockjs
+
+import Mock from 'mockjs'
+
+const data = Mock.mock({
+  'list|5-10': [{
+    'id|+1': 1,
+    'name': '@cname',
+    'age|18-30': 1,
+    'email': '@email'
+  }]
+})
+
+console.log(data)
+```
+
+持久储存 
+```
+npm install @vueuse/core
+
+//
+import { useStorage } from '@vueuse/core'
+
+const name = useStorage('name', 'default value')
+```
+
+defineProps
+```
+const props = defineProps<{
+  title: string
+  count?: number
+}>()
+```
+
+```
+const props = withDefaults(defineProps<{
+  title?: string
+  count?: number
+}>, {
+  title: 'Default Title',
+  count: 0
+})
+```
+
+defineEmits
+```
+const emits = defineEmits<{
+  (event: 'update', value: number): void
+  (event: 'delete', id: string): void
+}>()
+
+emit('update', 123)
+emit('delete', 'abc')
+```
+
+definemodel
+```
+// 父组件
+<MyComponent v-model:title="someTitle" v-model:count="someCount" />
+
+// 相當于 `props: { title }` + `emits: ['update:title']`
+
+const title = defineModel<string>('title')
+const count = defineModel<number>('count')
+```
+
+defineExpose
+```
+// 子组件
+function doSomething() {
+  console.log('child method called')
+}
+
+defineExpose({
+  doSomething
+})
+```
+
+<template>
+  <ChildComponent ref="childRef" />
+  <button @click="childRef?.doSomething()">呼叫子元件方法</button>
+</template>
+<template>
+  <ChildComponent ref="childRef" />
+  <button @click="childRef?.doSomething()">呼叫子元件方法</button>
+</template>
+
+```
+// 父组件
+<template>
+  <ChildComponent ref="childRef" />
+  <button @click="childRef?.doSomething()">呼叫子元件方法</button>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import ChildComponent from './ChildComponent.vue'
+
+const childRef = ref<InstanceType<typeof ChildComponent> | null>(null)
+</script>
+```
+
+
+# 2025-07-23
 i18
 
-defineprops
-defineemits
-definemodel
 
+格式化 editor
+
+
+样式
 
 
 
