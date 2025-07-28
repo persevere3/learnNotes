@@ -27,7 +27,6 @@ api.table.get();
 flutter 打包图片 [[专案工具]]
 
 # 2025-07-18
-封装 表单 
 element-plus prop (有验证才需要)
 5-3  lodash/clonedeep
 5-4  CssProperties
@@ -598,13 +597,336 @@ const childRef = ref<InstanceType<typeof ChildComponent> | null>(null)
 
 
 # 2025-07-23
-i18
+## i18n
+```
+npm install vue-i18n@9
+```
+
+```
+// src/locales/en.ts
+export default {
+  greeting: 'Hello, {name}!',
+  logout: 'Logout',
+}
+```
+
+```
+// src/locales/i18n.ts
+import { createI18n } from 'vue-i18n'
+
+const messages: Record<string, any> = {}
+
+// 自動載入所有語言檔案
+const modules = import.meta.glob('@/locales/*.ts', { eager: true })
+
+for (const path in modules) {
+  const matched = path.match(/\/([a-zA-Z-_]+)\.ts$/)
+  if (matched) {
+    const locale = matched[1]
+    if(locale !== 'i18n') messages[locale] = (modules[path] as any).default
+  }
+}
+
+export const i18n = createI18n({
+  legacy: false, // 使用 Composition API 模式
+  globalInjection: true, // 可在 template 中直接使用 $t
+  locale: 'zh-TW',
+  fallbackLocale: 'en',
+  messages
+})
+```
+
+```
+// main.ts
+import { i18n } from './locales/i18n'
+
+app.use(i18n)
+```
+
+## 代码统一
 
 
-格式化 editor
+### 安裝 Prettier 與 ESLint 所需的套件
+```
+npm install -D \
+prettier \
+eslint \
+eslint-plugin-vue \
+@typescript-eslint/eslint-plugin \
+@typescript-eslint/parser \
+eslint-plugin-prettier \
+eslint-config-prettier
+```
+
+### VSCode 插件
+| 插件名稱                      | 用途                       |
+| ------------------------- | ------------------------ |
+| ESLint                    | 即時檢查代碼風格與錯誤              |
+| Prettier - Code formatter | 自動排版格式化                  |
+| Volar                     | Vue 3 支援 + TypeScript 體驗 |
+| TypeScript Vue Plugin     | 更完整的型別支援                 |
+
+### .prettierrc
+```
+{
+  "semi": false,
+  "singleQuote": true,
+  "printWidth": 100,
+  "tabWidth": 2,
+  "trailingComma": "none",
+  "bracketSpacing": true,
+  "arrowParens": "avoid"
+}
+```
+
+| 設定項目            | 說明             |
+| --------------- | -------------- |
+| `semi`          | 關閉行尾分號         |
+| `singleQuote`   | 使用單引號          |
+| `printWidth`    | 每行最大長度為 100    |
+| `tabWidth`      | tab 代表兩個空白     |
+| `trailingComma` | 最後一個元素後不加逗號    |
+| `arrowParens`   | 箭頭函式參數為單個時不加括號 |
+### .prettierignore
+```
+# node_modules - 所有套件依賴
+node_modules
+
+# build outputs - 編譯或打包後的輸出
+dist
+build
+coverage
+
+# lock files - 鎖定檔案不格式化
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# .env files - 環境變數檔案
+.env
+.env.* 
+
+# 自動生成的型別與壓縮檔案
+*.d.ts
+*.min.js
+*.min.css
+*.log
+
+# public 資料夾中靜態資源（如 JS、第三方）
+public/**/*.js
+public/**/*.css
+
+# IDE 或作業系統檔案
+.DS_Store
+.vscode/*
+!.vscode/settings.json  # 保留專案設定可見
+
+# 單元測試快照或暫存檔案（如 Vitest、Jest）
+**/__snapshots__/
+**/*.snap
+**/.cache/
+```
+### .eslintrc.js
+```
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    node: true
+  },
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
+    ecmaVersion: 2020,
+    sourceType: 'module'
+  },
+  extends: [
+    'eslint:recommended',                    // ESLint 推薦規則
+    'plugin:vue/vue3-recommended',           // Vue 3 推薦規則
+    'plugin:@typescript-eslint/recommended', // TS 推薦規則
+    'plugin:prettier/recommended'            // 整合 Prettier（避免衝突）
+  ],
+  plugins: ['vue', '@typescript-eslint'],
+  rules: {
+    'vue/multi-word-component-names': 'off',
+    '@typescript-eslint/no-explicit-any': 'off'
+  }
+}
+```
+
+| 欄位        | 說明                               |
+| --------- | -------------------------------- |
+| `parser`  | 使用 Vue + TypeScript 語法解析器        |
+| `extends` | 結合 Vue、TS、ESLint 與 Prettier 推薦規則 |
+| `rules`   | 自訂規則（例如允許使用 `any`、單字元元件名）        |
+### .eslintignore
+```
+node_modules
+dist
+```
+
+### .vscode/settings.json
+```
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["javascript", "typescript", "vue"],
+  "prettier.enableDebugLogs": false
+}
+```
+
+|設定項目|說明|
+|---|---|
+|`formatOnSave`|儲存時自動格式化|
+|`codeActionsOnSave`|儲存時自動修復 ESLint 檢查錯誤|
+|`eslint.validate`|讓 ESLint 也能檢查 Vue/TS 等檔案格式|
+
+[[prettier]]
 
 
-样式
+# 2025-07-28 Flutter
+
+### 1. 变量的定义
+可以使用var来定义变量，变量的类型可以使用变量值推断出来，也可以使用特定类型来定义变量
+```dart
+// var 变量名称 = 赋值;
+var name = "hi"; //String类型
+var age = 18; //int类型
+var high = 1.70; //double类型
+
+// 变量类型 变量名称 = 赋值;
+String name = "hi"; // String类型
+int age = 18; // int类型
+double high = 1.70; // double类型
+```
+
+print 用法 
+runtimeType用法
+``` dart
+print('name=${name}');
+print('name=${name.runtimeType}');
+```
+
+如果变量不限于单个类型，则可以使用dynamic或Object来定义变量
+```dart
+dynamic value = 18;
+print("value = $value");
+value = "bruce";
+print("value = $value");
+value = 3.5;
+print("value = $value");
+  
+Object val = 18;
+print("val = $val");
+val = "bruce";
+print("val = $val");
+val = 3.5;
+print("val = $val");
+```
+
+final和const都是用作定义常量的， 也就是说定义后不能修改
+- const在赋值时，赋值内容必须是编译期间就能确定下来的
+- final是可以动态获取的，比如赋值一个函数
+```dart
+void main() {
+  int a = 1;
+  int b = 2;
+  // a = 3; // a可以重新赋值
+  final c1 = a * b;
+  const c2 = a * b; // 提示错误，因为a和b并不是使用const定义的
+  final t1 = test();
+  const t2 = test(); // 提示错误
+}
+
+// 定义test函数
+void test() {
+  print('test 方法');
+}
+```
+
+ 如果一个变量没有初始化值，那么它的默认值为null
+
+### 2. 内置类型
+> **Numbers（数值）:**  包含**int**和**double**两种类型，没有像Java中的float类型，int和double都是num的子类型。
+>
+> **Strings（字符串）:** 可以使用单引号或者双引号来创建字符串。
+>
+> **Booleans（布尔值）**：Dart有一个名为bool的类型，只有两个对象具有bool类型：true和false，他们都是编译时常量。
+>
+> **List（列表）: **在 Dart 中**数组**就是 [List](https://api.dartlang.org/stable/dart-core/List-class.html) 对象。
+>
+> **Map（键值对象）：**Map 是一个键值对相关的对象。
+>
+> **Runes：**runes 代表字符串的 UTF-32 code points。
+>
+> **Symbols：**一个 [Symbol](https://api.dartlang.org/stable/dart-core/Symbol-class.html) object 代表 Dart 程序中声明的操作符或者标识符。
+
+### 3. 数字类型
+转换类型
+```dart
+// 1. 字符串转换数字 .parse()
+var str = int.parse('123');
+var str1 = double.parse('123.22');
+print('$str, ${str.runtimeType}; $str1, ${str1.runtimeType}');
 
 
+// 2. 数字转字符串 .toString()
+var str2 = 123.toString();
+var str3 = 123.44.toString();
+print('$str2, ${str2.runtimeType}; $str3, ${str3.runtimeType}');
+```
 
+### 4. 布尔类型
+** 注意: Dart中不能判断非0即真, 或者非空即真，string可以使用 isEmpty **
+
+### 5. 字符串
+可以使用单引号或双引号
+```dart
+// 1.定义字符串的方式
+var s1 = 'Hello World';
+var s2 = "Hello Dart";
+
+var s3 = 'Hello\'Fullter';
+var s4 = "Hello'Fullter";
+
+// 2.多行字符串
+var message1 = '''
+	哈哈哈
+	呵呵呵
+	嘿嘿嘿
+''';
+```
+
+### 赋值操作
+#### ??=
+- 如果变量的值为null，则使用右侧的值进行赋值；
+- 如果变量的值不为null，则保持原有的值，不会进行赋值操作；
+
+```dart
+void main() {
+  var name1 = '张三';
+  name1 ??= '李四';
+  print(name1); // 张三
+  var name2 = '';
+  name2 ??= '李四';
+  print(name2); // 李四
+}
+```
+
+### 条件运算符
+#### ??
+`expr1 ?? expr2`
+- 如果`expr1`是`null`,则返回`expr2`的值；
+- 如果`expr1`不是`null`, 则使用`expr1`的值；
+
+```
+void main() {
+  var name1 = '张三';
+  var name2 = null;
+  name2 = '李四' ?? name1;
+  print(name2);
+}
+```
