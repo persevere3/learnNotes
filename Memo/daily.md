@@ -930,3 +930,225 @@ void main() {
   print(name2);
 }
 ```
+
+### List
+定义
+```dart
+// List定义
+// 1.使用类型推导定义
+var lists = ['a', 'b', 'c', 'd'];
+print('$lists ${lists.runtimeType}  ${lists.length}');
+
+// 2.明确指定类型
+List<int> nums = [1, 2, 3, 4];
+print('$nums ${nums.runtimeType}  ${nums.length}');
+```
+
+操作
+```dart
+  // 数组的添加、删除、包含操作
+  var lists = ['a', 'b', 'c', 'd', 'a'];
+
+  // 添加元素 
+  lists.add('e');
+
+  // 添加元素
+  lists.addAll(['ddd', 'eee', 'aaa']);
+
+  // 插入元素
+  lists.insert(0, 'aa');
+
+  // join split 
+
+  // 遍历
+  // 1 for(var i = 0; i < lists.length; i++)
+  // 2 forEach
+
+  // 删除元素
+  lists.remove('a');
+
+  // 根据下标删除元素
+  lists.removeAt(3);
+  print('$lists ${lists.runtimeType} ${lists.length} ${lists.contains('aaa')}');
+```
+
+### Set - 去除重复的值
+定义
+```dart
+// Set的定义
+// 1.使用类型推导定义
+var listsSet = {'a', 'b', 'c', 'c'};
+print('$listsSet ${listsSet.runtimeType}  ${listsSet.length}');
+
+// 2.明确指定类型
+Set<int> numsSet = {1, 2, 3, 4};
+print('$numsSet ${numsSet.runtimeType}  ${numsSet.length}');
+```
+
+操作
+``` dart
+  // Set的添加、删除、包含操作
+  var listsSet = {'a', 'b', 'c', 'ddd'};
+
+  // 添加
+  listsSet.add('e');
+
+  // 添加
+  listsSet.addAll({'ddd', 'eee', 'aaa'});
+
+  // 转成List
+  listsSet.toList()
+
+  // 删除元素
+  listsSet.remove('ddd');
+  print('$listsSet ${listsSet.runtimeType} ${listsSet.length} ${listsSet.contains('aaa')}');
+```
+
+### Map
+定义
+ ```dart
+// Map的定义
+// 1.使用类型推导定义
+var map1 = {'name': '张三', 'age': 18};
+print('$map1 ${map1.runtimeType}  ${map1.length}');
+
+// 2.明确指定类型
+Map<String, Object> map2 = {'height': 1.78, 'address': '广州市'};
+print('$map2 ${map2.runtimeType}  ${map2.length}');
+```
+
+操作
+``` dart
+  // Map的操作
+  var map1 = {'name': '张三', 'age': 18};
+  print('$map1 ${map1.runtimeType} ${map1.length}');
+  // 根据key获取value 
+  // 没有 map1.name 写法
+  print(map1['name']); // 张三
+
+  // 获取所有的keys
+  print('${map1.keys} ${map1.keys.runtimeType}');
+
+  // 获取所有的values
+  print('${map1.values} ${map1.values.runtimeType}');
+
+  // 获取所有的values
+  print('${map1.containsKey('age')} ${map1.containsValue(18)}');
+
+  // map1.keys.toList()
+
+  // 根据key删除元素
+  map1.remove('age');
+  print('${map1}');
+```
+
+### 函数
+
+```dart
+/*
+返回值 函数的名称(参数列表) {
+  函数体
+  return 返回值
+}
+*/
+// 普通的函数定义
+String getStr(String str) {
+  return str;
+}
+// 箭头函数定义
+String getStr(String str) => str;
+
+// 没有 return 默认返回 null 
+```
+
+可选参数
+
+```dart
+// 命名可选参数
+void user(String name, {int age, String sex}){
+  print('$name, $age, $sex');
+}
+
+void main() {
+  user('张三'); // 张三, null, null
+  user('张三', age: 12); // 张三, 12, null
+  user('张三', sex: '男', age: 20); // 张三, 20, 男 
+}
+
+```
+
+### 类别
+
+构造函数
+```dart
+class Person {
+  String name;
+  int age;
+  
+  // 默认构造函数
+  // Person(String name, int age){
+  //   this.name = name;
+  //   this.age = age;
+  // }
+  // 上面可以简写成下面这种形式
+  Person(this.name, this.age);
+
+  // 命名构造函数	
+  Person.now(){
+    print(this.name, this.age);
+  }
+
+  void getInfo() {
+    print("${this.name}-----${this.age}");
+  }
+
+  void setInfo(int age) {
+    this.age = age;
+  }
+}
+
+void main() {
+  // 实例化
+  Person p1 = new Person('张三', 10);
+  p1.getInfo();
+
+  Person p2 = new Person.now('李四', 19);
+  p2.getInfo();
+
+  print(Person.name) // X ，只能透过实例化取得的对象去访问name	
+}
+
+```
+
+抽离类
+/lib/Person.dart
+```dart
+class Person {
+  String name;
+  int age;
+  Person(this.name, this.age);
+
+  Person.now(){
+    print('我是命名构造函数');
+  }
+
+  void getInfo() {
+    print("${this.name}-----${this.age}");
+  }
+
+  void setInfo(int age) {
+    this.age = age;
+  }
+}
+```
+
+主文件：
+```dart
+import './lib/Person.dart';
+
+void main() {
+  // 实例化Person
+  Person p1 = new Person('张三', 10);
+  p1.getInfo();
+}
+```
