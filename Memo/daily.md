@@ -1151,4 +1151,24 @@ void main() {
   Person p1 = new Person('张三', 10);
   p1.getInfo();
 }
-```
+``` 
+
+### 项目结构
+material.dart ui库
+main 入口函数
+widget 组件
+
+Container
+宽度 = 子元素宽度
+
+Row Column
+MainAxisAlignment.spaceAround
+
+Expanded
+flex
+
+Padding
+padding: EdgeInsets.all(10)，padding: EdgeInsets.only(left: 10)
+
+Icon
+Icons.ac_unit, color: Colors.blue，color: Color(0xffffff)
