@@ -1172,3 +1172,80 @@ padding: EdgeInsets.all(10)，padding: EdgeInsets.only(left: 10)
 
 Icon
 Icons.ac_unit, color: Colors.blue，color: Color(0xffffff)
+
+#  2024-07-31
+Stack
+children: Positioned
+绝对定位
+
+底部导览
+Scaffold
+appBar:
+body:
+bottomNavigationBar: BottomNavigationBar(
+onTap:
+setState((int index){
+	currentIndex = index
+})
+currentIndex
+selectedItemColor
+unselectedItemColor
+items: <BottomNavigationBar>[])
+
+页面 pages 
+
+SafeArea
+
+AppBar
+
+左侧按钮
+leading: IconButton(
+icon: ,
+onPressed:
+)
+title
+
+右侧按钮
+actions: <Widget>[]
+
+页面跳转(传参透过构造函数)
+Navigator.of(context).push(
+	MaterialPageRoute(builder: (BuildContext context) => SearchPage())
+)
+
+命名路由跳转(传参)
+MaterialApp
+initialRoute: '/',
+onGenerateRoute: onGenerateRoute()
+
+Navigator.pushNamed(context, '/edit')
+
+``` dart
+var routes = {
+	'/': (BuildContext context, {arguments }) => IndexPage(arguments: arguments)
+}
+var onGenerateRoute = (RouteSettings setting) {
+  print('$setting-----');
+  // 统一处理传参
+  final String name = setting.name;
+  final Function pageContentBuilder = routes[name];
+
+  if (pageContentBuilder != null) {
+    if (setting.arguments != null) {
+      final Route route = MaterialPageRoute(
+        builder: (context) =>
+            pageContentBuilder(context, arguments: setting.arguments),
+      );
+      return route;
+    } else {
+      final Route route = MaterialPageRoute(
+        builder: (context) => pageContentBuilder(context),
+      );
+      return route;
+    }
+  }
+}
+```
+
+
+
