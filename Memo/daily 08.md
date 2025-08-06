@@ -161,3 +161,14 @@ class _HomeContentState extends State<HomeContent> {
   }
 }
 ```
+
+# 2024-08-06
+网路请求
+dio: ^3.0.0
+轮播图
+flutter_swiper: ^1.1.4
+过渡动画
+flutter_spinkit: ^3.1.0
+
+查询 包
+pub.dev
